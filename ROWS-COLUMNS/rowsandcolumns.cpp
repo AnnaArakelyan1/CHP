@@ -17,8 +17,8 @@ public:
     }
 
     void print() {
-        for (size_t i = 0; i < rows; ++i) {
-            for (size_t j = 0; j < columns; ++j) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
                 cout << str[i][j] << " ";
             }
             cout << endl;
@@ -26,15 +26,15 @@ public:
     }
     void encr(int size){
         vector<vector<char>> newStr(columns, vector<char>(rows, ' '));
-        for (size_t j = 0; j < columns; ++j) {
-            for (size_t i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            for (int i = 0; i < rows; ++i) {
                 newStr[j][i] = str[i][j];
             }
         }
 
         cout << "Encrypted string:" << endl;
-        for (size_t j = 0; j < columns; ++j) {
-            for (size_t i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            for (int i = 0; i < rows; ++i) {
                 cout << newStr[j][i];
             }
         }
