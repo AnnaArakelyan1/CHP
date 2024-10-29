@@ -1,117 +1,102 @@
-//encryption and decryption with a class
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <vector>
 using namespace std;
 
-class MyClass{
-     private:
-         string str;
-         int size;
-     
-     public:
-        MyClass(const string& input,int n) {
-            this->str=input;
-            this->size=n;
-        }
-         
-         void print(const string& str, int size) {
-                  cout << str;
-                  cout << endl;
-                   
-         }
-       
- string encryption(const string& text, const string& esh, const string& desh, int size) {
-    string encr;
-    for (int i = 0; i < size; i++) {  
-           char current = text[i];
-            bool b=false;
-            for (int j = 0; j < 26; j++) {
+class MyClass {
+private:
+    string str;
+    int size;
+
+public:
+    MyClass(const string& input, int n) : str(input), size(n) {}
+
+    void print(const string& str) {
+        cout << str << endl;
+    }
+
+    string encryption(const string& text, const vector<char>& esh, const vector<char>& desh) {
+        string encr;
+        for (int i = 0; i < text.size(); i++) {
+            char current = text[i];
+            bool found = false;
+            for (int j = 0; j < 256; j++) {
                 if (current == esh[j]) {
-                  encr += desh[j];
-                  b=true;
-                  break;
-                 }
+                    encr += desh[j];
+                    found = true;
+                    break;
+                }
             }
-            if(b==false){
-                    encr+=current;
-            }
-           
-       
-    }
-    return encr;
-}
-
-
-string decryption(const string& text, const string& esh, const string& desh, int size) {
-    string decr;
-    for (int i = 0; i < size; i++) {
-        char current = text[i];
-        bool b=false;
-        for (int j = 0; j < 26; j++) {
-            if (current == desh[j]) {
-                decr += esh[j];
-                b=true;
-                break;
+            if (!found) {
+                encr += current;
             }
         }
-         if(b==false){
-                    decr+=current;
-            }
+        return encr;
     }
-    return decr;
-}
 
-
-char IsUnique(const string& desh, char newChar, int index) {
-    while (true) {
-        bool isUnique = true;
-        for (int i = 0; i <= index; i++) {
-            if (newChar == desh[i]) {
-                isUnique = false;
-                break;
+    string decryption(const string& text, const vector<char>& esh, const vector<char>& desh) {
+        string decr;
+        for (int i = 0; i < text.size(); i++) {
+            char current = text[i];
+            bool found = false;
+            for (int j = 0; j < 256; j++) {
+                if (current == desh[j]) {
+                    decr += esh[j];
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                decr += current;
             }
         }
-        if (isUnique) {
-            return newChar;
-        }
-        newChar = rand() % 26 + 'a';
+        return decr;
     }
-}
 
-   
+    char generateUniqueChar(vector<char>& desh, int index) {
+        while (true) {
+            char newChar = rand() % 256;
+            bool isUnique = true;
+            for (int i = 0; i < index; i++) {
+                if (newChar == desh[i]) {
+                    isUnique = false;
+                    break;
+                }
+            }
+            if (isUnique) {
+                return newChar;
+            }
+        }
+    }
 };
 
-
-
 int main() {
-    string esh, desh;
+    vector<char> esh(256), desh(256);
     string text;
-    cout<<"Input text: ";
-    getline(cin,text);
-    MyClass myclass(text,text.length());
-   
-    esh.resize(26);
-    for (int i = 0; i < 26; i++) {
-        esh[i] = 'a' + i;
+
+    cout << "Input text: ";
+    getline(cin, text);
+    MyClass myclass(text, text.length());
+    for (int i = 0; i < 256; i++) {
+        esh[i] = static_cast<char>(i);
     }
-    cout<<endl<<"Encryption alphabet: ";
-    myclass.print(esh,esh.length());
-   
-    desh.resize(26);
-    srand(time(0));
-    for (int i = 0; i < 26; i++) {
-        char newChar = rand() % 26 + 'a';
-        desh[i] = myclass.IsUnique(desh, newChar, i);
+    cout << endl << "Encryption alphabet: ";
+    myclass.print(string(esh.begin(), esh.end()));
+    srand(static_cast<unsigned>(time(0)));
+    for (int i = 0; i < 256; i++) {
+        desh[i] = myclass.generateUniqueChar(desh, i);
     }
-    cout<<"Decryption alphabet: ";
-    myclass.print(desh,desh.length());
-     
-    string en=myclass.encryption(text,esh,desh,text.length());
-    cout<<endl<<"Encrypted text: ";
-    myclass.print(en,en.length());
-     cout<<"Decrypted text: ";
-    string dec=myclass.decryption(en,esh,desh,text.length());
-    myclass.print(dec,dec.length());
+    cout << "Decryption alphabet: ";
+    myclass.print(string(desh.begin(), desh.end()));
+
+    string encryptedText = myclass.encryption(text, esh, desh);
+    cout << endl << "Encrypted text: ";
+    myclass.print(encryptedText);
+
+    cout << "Decrypted text: ";
+    string decryptedText = myclass.decryption(encryptedText, esh, desh);
+    myclass.print(decryptedText);
+
     return 0;
 }
