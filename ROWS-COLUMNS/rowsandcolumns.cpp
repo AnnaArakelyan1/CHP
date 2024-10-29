@@ -5,30 +5,28 @@ using namespace std;
 
 class Encryption {
 private:
-    vector<vector<char>> str;
     int rows;
     int columns;
 
 public:
-    Encryption(vector<vector<char>> Str, int Rows, int Columns) {
-        this->str = Str;
+    Encryption(int Rows, int Columns) {
         this->rows = Rows;
         this->columns = Columns;
     }
 
-    void print() {
+    void print(vector<vector<char>> Str) {
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < columns; ++j) {
-                cout << str[i][j] << " ";
+                cout << Str[i][j] << " ";
             }
             cout << endl;
         }
     }
-    void encr(int size){
+    void encr(vector<vector<char>> Str, int size){
         vector<vector<char>> newStr(columns, vector<char>(rows, ' '));
         for (int j = 0; j < columns; ++j) {
             for (int i = 0; i < rows; ++i) {
-                newStr[j][i] = str[i][j];
+                newStr[j][i] = Str[i][j];
             }
         }
 
@@ -62,9 +60,9 @@ int main() {
         }
     }
 
-    Encryption encrypt(str, rows, SIZE);
-    encrypt.print();
-    encrypt.encr(input.length());
+    Encryption encrypt(rows, SIZE);
+    encrypt.print(str);
+    encrypt.encr(str,input.length());
     
 
     return 0;
