@@ -66,8 +66,7 @@ string Caesar::decryption(const string& text, const string& esh, const string& d
     return decr;
 }
 
-   
-};
+
 
 
 
