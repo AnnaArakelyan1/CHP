@@ -3,60 +3,65 @@
 #include <string>
 using namespace std;
 
-class MyClass{
-     private:
-         string str;
-         int size;
-     
-     public:
-        MyClass(const string& input,int n) {
-            this->str=input;
-            this->size=n;
-        }
-         
-         void print(const string& str, int size) {
-                  cout << str;
-                  cout << endl;
-                    
-         }
-       
- string encryption(const string& text, const string& esh, const string& desh, int size) {
+
+class Caesar {
+private:
+    string str;
+    int size;
+
+public:
+    Caesar(const string& input, int n);
+
+    void print(const string& str, int size);
+
+    string encryption(const string& text, const string& esh, const string& desh, int size);
+    string decryption(const string& text, const string& esh, const string& desh, int size);
+};
+
+ Caesar::Caesar(const string& input, int n) {
+    this->str = input;
+    this->size = n;
+}
+
+void Caesar::print(const string& str, int size) {
+    cout << str;
+    cout << endl;
+}
+
+string Caesar::encryption(const string& text, const string& esh, const string& desh, int size) {
     string encr;
-    for (int i = 0; i < size; i++) {  
-           char current = text[i];
-            bool b=false;
-            for (int j = 0; j < 26; j++) {
-                if (current == esh[j]) {
-                  encr += desh[j];
-                  b=true;
-                  break;
-                 }
+    for (int i = 0; i < size; i++) {
+        char current = text[i];
+        bool b = false;
+        for (int j = 0; j < 256; j++) {
+            if (current == esh[j]) {
+                encr += desh[j];
+                b = true;
+                break;
             }
-            if(b==false){
-                    encr+=current;
-            }
-            
-        
+        }
+        if (!b) {
+            encr += current;
+        }
     }
     return encr;
 }
 
-
-string decryption(const string& text, const string& esh, const string& desh, int size) {
+string Caesar::decryption(const string& text, const string& esh, const string& desh, int size) {
     string decr;
     for (int i = 0; i < size; i++) {
         char current = text[i];
-        bool b=false;
-        for (int j = 0; j < 26; j++) {
+        bool b = false;
+        for (int j = 0; j < 256; j++) {
             if (current == desh[j]) {
                 decr += esh[j];
-                b=true;
+                b = true;
                 break;
             }
         }
-         if(b==false){
-              decr+=current;
-            }
+        if (!b) {
+            decr += current;
+        }
     }
     return decr;
 }
@@ -66,35 +71,34 @@ string decryption(const string& text, const string& esh, const string& desh, int
 
 
 
-int main() {
-    string esh, desh;
-    string text;
-    cout<<"Input text: ";
-    getline(cin,text);
-    MyClass myclass(text,text.length());
-    
-    esh.resize(26);
-    for (int i = 0; i < 26; i++) {
-        esh[i] = 'a' + i;
-    }
-    cout<<endl<<"Encryption alphabet: ";
-    myclass.print(esh,esh.length());
-    
-    desh.resize(26);
-    for (int i =0; i < 26; i++) {
-          desh[i]='a'+i+3;
-    }
-    desh[23]='a';
-    desh[24]='b';
-    desh[25]='c';
-    cout<<"Decryption alphabet: ";
-    myclass.print(desh,desh.length());
+// int main() {
+//    string inputText;
+//     cout << "Enter a string to encrypt: ";
+//     getline(cin, inputText);
+
+//     int shift;
+//     cout << "Enter Caesar cipher shift value: ";
+//     cin >> shift;
+//     cin.ignore(); 
+
+//     Caesar caesar(inputText, inputText.length());
+
+//     string esh(256, ' '), desh(256, ' ');
+
+//     for (int i = 0; i < 256; i++) {
+//         esh[i] = static_cast<char>(i); 
+//     }
+
+ 
+//     for (int i = 0; i < 256; i++) {
+//         desh[i] = static_cast<char>((i + shift) % 256);  
+//     }
       
-    string en=myclass.encryption(text,esh,desh,text.length());
-    cout<<endl<<"Encrypted text: ";
-    myclass.print(en,en.length());
-     cout<<"Decrypted text: ";
-    string dec=myclass.decryption(en,esh,desh,text.length());
-    myclass.print(dec,dec.length());
-    return 0;
-}
+//     string en=caesar.encryption(text,esh,desh,text.length());
+//     cout<<endl<<"Encrypted text: ";
+//     caesar.print(en,en.length());
+//     cout<<"Decrypted text: ";
+//     string dec=caesar.decryption(en,esh,desh,text.length());
+//     caesar.print(dec,dec.length());
+//     return 0;
+// }
