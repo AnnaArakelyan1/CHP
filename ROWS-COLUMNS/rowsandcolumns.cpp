@@ -60,31 +60,31 @@ public:
     }
 };
 
-int main() {
-    int SIZE;
-    string input;
-    cout << "Enter size: ";
-    cin >> SIZE;
-    cin.ignore();
-    cout << "Enter input string: ";
-    getline(cin, input);
+// int main() {
+//     int SIZE;
+//     string input;
+//     cout << "Enter size: ";
+//     cin >> SIZE;
+//     cin.ignore();
+//     cout << "Enter input string: ";
+//     getline(cin, input);
     
-    int rows = (input.length() + SIZE - 1) / SIZE;
-    vector<vector<char>> str(rows, vector<char>(SIZE, ' '));
+//     int rows = (input.length() + SIZE - 1) / SIZE;
+//     vector<vector<char>> str(rows, vector<char>(SIZE, ' '));
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            int index = i * SIZE + j;
-            if (index < input.length()) {
-                str[i][j] = input[index];
-            }
-        }
-    }
+//     for (int i = 0; i < rows; i++) {
+//         for (int j = 0; j < SIZE; j++) {
+//             int index = i * SIZE + j;
+//             if (index < input.length()) {
+//                 str[i][j] = input[index];
+//             }
+//         }
+//     }
 
-    Encryption encrypt(rows, SIZE);
-    encrypt.print(str);
-    vector<vector<char>> encrypted = encrypt.encr(str);
-    encrypt.decr(encrypted);
+//     Encryption encrypt(rows, SIZE);
+//     encrypt.print(str);
+//     vector<vector<char>> encrypted = encrypt.encr(str);
+//     encrypt.decr(encrypted);
 
-    return 0;
-}
+//     return 0;
+// }
