@@ -9,62 +9,58 @@ private:
     int columns;
 
 public:
-    Encryption(int Rows, int Columns);
 
-    void print(const vector<vector<char>>& Str);
-    vector<vector<char>> encr(const vector<vector<char>>& Str);
-    vector<vector<char>> decr(const vector<vector<char>>& Str);
+    Encryption(int Rows, int Columns) {
+        this->rows = Rows;
+        this->columns = Columns;
+    }
+
+    void print(const std::vector<std::vector<char>>& Str) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
+                std::cout << Str[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    std::vector<std::vector<char>> encr(const std::vector<std::vector<char>>& Str) {
+        std::vector<std::vector<char>> newStr(columns, std::vector<char>(rows, ' '));
+        for (int j = 0; j < columns; ++j) {
+            for (int i = 0; i < rows; ++i) {
+                newStr[j][i] = Str[i][j];
+            }
+        }
+
+        std::cout << "Encrypted string:" << std::endl;
+        for (int j = 0; j < columns; ++j) {
+            for (int i = 0; i < rows; ++i) {
+                std::cout << newStr[j][i];
+            }
+        }
+        std::cout << std::endl;
+        return newStr;
+    }
+
+    std::vector<std::vector<char>> decr(const std::vector<std::vector<char>>& Str) {
+        std::vector<std::vector<char>> original(rows, std::vector<char>(columns, ' '));
+        for (int j = 0; j < columns; ++j) {
+            for (int i = 0; i < rows; ++i) {
+                original[i][j] = Str[j][i];
+            }
+        }
+
+        std::cout << "Decrypted string:" << std::endl;
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
+                std::cout << original[i][j];
+            }
+        }
+        std::cout << std::endl;
+        return original;
+    }
+
 };
-Encryption::Encryption(int Rows, int Columns) {
-    this->rows = Rows;
-    this->columns = Columns;
-}
-
-void Encryption::print(const vector<vector<char>>& Str) {
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < columns; ++j) {
-            cout << Str[i][j] << " ";
-        }
-        cout << endl;
-    }
-}
-
-vector<vector<char>> Encryption::encr(const vector<vector<char>>& Str) {
-    vector<vector<char>> newStr(columns, vector<char>(rows, ' '));
-    for (int j = 0; j < columns; ++j) {
-        for (int i = 0; i < rows; ++i) {
-            newStr[j][i] = Str[i][j];
-        }
-    }
-
-    cout << "Encrypted string:" << endl;
-    for (int j = 0; j < columns; ++j) {
-        for (int i = 0; i < rows; ++i) {
-            cout << newStr[j][i];
-        }
-    }
-    cout << endl;
-    return newStr;
-}
-
-vector<vector<char>> Encryption::decr(const vector<vector<char>>& Str) {
-    vector<vector<char>> original(rows, vector<char>(columns, ' '));
-    for (int j = 0; j < columns; ++j) {
-        for (int i = 0; i < rows; ++i) {
-            original[i][j] = Str[j][i];
-        }
-    }
-
-    cout << "Decrypted string:" << endl;
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < columns; ++j) {
-            cout << original[i][j];
-        }
-    }
-    cout << endl;
-    return original;
-}
-
 
 //int main() {
 //    int SIZE;
