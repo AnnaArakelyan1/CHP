@@ -6,30 +6,24 @@ using namespace std;
 
 class Caesar {
 private:
-    string str;
+    std::string str;
     int size;
 
 public:
-    Caesar(const string& input, int n);
 
-    void print(const string& str, int size);
 
-    string encryption(const string& text, const string& esh, const string& desh, int size);
-    string decryption(const string& text, const string& esh, const string& desh, int size);
-};
-
- Caesar::Caesar(const string& input, int n) {
+Caesar(const std::string& input, int n) {
     this->str = input;
     this->size = n;
 }
 
-void Caesar::print(const string& str, int size) {
-    cout << str;
-    cout << endl;
+void print(const std::string& str, int size) {
+    std::cout << str;
+    std::cout << std::endl;
 }
 
-string Caesar::encryption(const string& text, const string& esh, const string& desh, int size) {
-    string encr;
+std::string encryption(const std::string& text, const std::string& esh, const std::string& desh, int size) {
+    std::string encr;
     for (int i = 0; i < size; i++) {
         char current = text[i];
         bool b = false;
@@ -47,8 +41,8 @@ string Caesar::encryption(const string& text, const string& esh, const string& d
     return encr;
 }
 
-string Caesar::decryption(const string& text, const string& esh, const string& desh, int size) {
-    string decr;
+std::string decryption(const std::string& text, const std::string& esh, const std::string& desh, int size) {
+    std::string decr;
     for (int i = 0; i < size; i++) {
         char current = text[i];
         bool b = false;
@@ -66,7 +60,7 @@ string Caesar::decryption(const string& text, const string& esh, const string& d
     return decr;
 }
 
-
+};
 
 
 
@@ -88,11 +82,11 @@ string Caesar::decryption(const string& text, const string& esh, const string& d
 //         esh[i] = static_cast<char>(i); 
 //     }
 
- 
+
 //     for (int i = 0; i < 256; i++) {
 //         desh[i] = static_cast<char>((i + shift) % 256);  
 //     }
-      
+
 //     string en=caesar.encryption(text,esh,desh,text.length());
 //     cout<<endl<<"Encrypted text: ";
 //     caesar.print(en,en.length());
