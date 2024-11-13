@@ -2,8 +2,11 @@
 #include <vector>
 #include <string>
 #include "caesar.cpp"  
-#include "rowsandcolumns.cpp" 
+#include "rowsandcols.cpp"
 using namespace std;
+
+
+
 int main() {
     string inputText;
     cout << "Enter a string to encrypt: ";
@@ -12,30 +15,32 @@ int main() {
     int shift;
     cout << "Enter Caesar cipher shift value: ";
     cin >> shift;
-    cin.ignore(); 
+    cin.ignore();
 
     Caesar caesar(inputText, inputText.length());
 
     string esh(256, ' '), desh(256, ' ');
 
     for (int i = 0; i < 256; i++) {
-        esh[i] = static_cast<char>(i); 
+        esh[i] = static_cast<char>(i);
+        /*esh += i;*/
     }
 
- 
+
     for (int i = 0; i < 256; i++) {
-        desh[i] = static_cast<char>((i + shift) % 256);  
+        desh[i] = static_cast<char>((i + shift) % 256);
+        /*desh += i;*/
     }
 
     string encryptedCaesar = caesar.encryption(inputText, esh, desh, inputText.length());
     cout << "Encrypted with Caesar cipher: " << encryptedCaesar << endl;
 
-    
+
     int SIZE;
     cout << "Enter matrix size for transposition: ";
     cin >> SIZE;
 
-  
+
     int rows = (encryptedCaesar.length() + SIZE - 1) / SIZE;
     vector<vector<char>> str(rows, vector<char>(SIZE, ' '));
 
@@ -54,7 +59,7 @@ int main() {
     vector<vector<char>> encryptedMatrix = encrypt.encr(str);
     cout << endl;
 
- 
+
     vector<vector<char>> decryptedMatrix = encrypt.decr(encryptedMatrix);
     string decryptedText = "";
 
@@ -73,4 +78,19 @@ int main() {
     return 0;
 }
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
