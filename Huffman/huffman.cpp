@@ -120,7 +120,7 @@ void buildHuffmanTree(string text)
 
 int main()
 {
-	string text = "Huffman coding is a data compression algorithm.";
+	string text = "Beep Boop Beer!";
 
 	buildHuffmanTree(text);
 
