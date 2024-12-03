@@ -1,11 +1,11 @@
 param (
+    [Parameter(Mandatory=$true)]
     [string]$filePath
 )
 
 # Trim leading and trailing spaces from the path
 $filePath = $filePath.Trim()
-
-Write-Host "File path provided: '$filePath'"  # Debugging line
+Write-Host "File path provided: '$filePath'"
 
 # Check if the file exists
 if (-Not (Test-Path $filePath)) {
@@ -14,39 +14,68 @@ if (-Not (Test-Path $filePath)) {
 }
 
 # Read the content of the file
-$compressedData = Get-Content -Path $filePath -Raw
+$compressedContent = Get-Content -Path $filePath -Raw
+
+# Initialize variables for decompression
 $decompressedData = ""
-$index = 0
-$length = $compressedData.Length
+$currentPos = 0
+$contentLength = $compressedContent.Length
 
-while ($index -lt $length) {
-    if ($compressedData[$index] -eq '[') {
-        # Find the closing bracket to get the full [offset|length] part
-        $closingBracketIndex = $compressedData.IndexOf(']', $index)
-        $token = $compressedData.Substring($index + 1, $closingBracketIndex - $index - 1)
-        $parts = $token -split '\|'
-
-        $offset = [int]$parts[0]
-        $matchLength = [int]$parts[1]
+while ($currentPos -lt $contentLength) {
+    # Check if we're at the start of a compressed sequence
+    if ($currentPos + 1 -lt $contentLength -and $compressedContent[$currentPos + 1] -eq '[') {
+        # Store the character before the bracket
+        $charBeforeBracket = $compressedContent[$currentPos]
         
-        # Get the following character after the match
-        $nextChar = if (($closingBracketIndex + 1) -lt $length) { $compressedData[$closingBracketIndex + 1] } else { '' }
-
-        # Add the substring based on offset and length
-        $startOfMatch = $decompressedData.Length - $offset
-        $match = $decompressedData.Substring($startOfMatch, $matchLength)
-        $decompressedData += $match + $nextChar
-
-        # Move the index past the token and the next character
-        $index = $closingBracketIndex + 2
+        # Find the closing bracket
+        $bracketEndPos = $compressedContent.IndexOf(']', $currentPos)
+        if ($bracketEndPos -eq -1) {
+            Write-Host "Error: Invalid compressed format - missing closing bracket"
+            exit 1
+        }
+        
+        # Extract the offset and length values
+        $compressedSequence = $compressedContent.Substring($currentPos + 2, $bracketEndPos - ($currentPos + 2))
+        $values = $compressedSequence.Split('|')
+        
+        if ($values.Length -ne 2) {
+            Write-Host "Error: Invalid compressed format - expected offset|length"
+            exit 1
+        }
+        
+        try {
+            $offset = [int]$values[0]
+            $length = [int]$values[1]
+            
+            # Calculate the start position in the decompressed data
+            $startPos = $decompressedData.Length - $offset
+            
+            # Copy the matched sequence
+            for ($i = 0; $i -lt $length - 1; $i++) {
+                $decompressedData += $decompressedData[$startPos + $i]
+            }
+            # Add the character before the bracket as the last character of the sequence
+            $decompressedData += $charBeforeBracket
+            
+            # Move the position past the closing bracket
+            $currentPos = $bracketEndPos + 1
+            
+        } catch {
+            Write-Host "Error: Invalid number format in compressed sequence"
+            exit 1
+        }
     } else {
-        # Append a single character as is if not part of a token
-        $decompressedData += $compressedData[$index]
-        $index++
+        # Copy uncompressed character
+        $decompressedData += $compressedContent[$currentPos]
+        $currentPos++
     }
 }
 
-# Save the decompressed data to an output file
-$outputPath = "C:\Users\HP\OneDrive\Documents\chp\lz77_decompressed.txt"
-Set-Content -Path $outputPath -Value $decompressedData
-Write-Host "Decompression complete. Decompressed data written to $outputPath."
+# Write the decompressed data back to the file
+try {
+    Set-Content -Path $filePath -Value $decompressedData -NoNewline
+    Write-Host "Decompression complete. Decompressed data written back to the original file."
+} catch {
+    Write-Host "Error writing to file: $_"
+    exit 1
+}
