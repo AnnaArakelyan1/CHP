@@ -67,14 +67,22 @@ echo Decrypted text is: %decrypted_text%
 pause
 goto menu
 
-
-
-
-
 :encrypt_file
 set /p file="Enter the file path to encrypt: "
-set /p shift="Enter shift value: "
-powershell -File "C:\Users\HP\OneDrive\Documents\file_caesar_cipher.ps1" -filePath "%file%" -shift %shift%
+set "scriptPath=C:\Users\HP\OneDrive\Documents\file_caesar_cipher.ps1"
+if not exist "%scriptPath%" (
+    echo Error: The script '%scriptPath%' does not exist.
+    pause
+    goto menu
+)
+
+if not exist "%file%" (
+    echo Error: The file '%file%' does not exist.
+    pause
+    goto menu
+)
+
+powershell -File "%scriptPath%" -filePath "%file%"
 echo File encrypted successfully.
 pause
 goto menu
@@ -82,23 +90,53 @@ goto menu
 :decrypt_file
 set /p file="Enter the file path to decrypt: "
 set /p shift="Enter shift value used for encryption: "
+set "scriptPath=C:\Users\HP\OneDrive\Documents\file_caesar_cipher_decrypt.ps1"
+if not exist "%scriptPath%" (
+    echo Error: The script '%scriptPath%' does not exist.
+    pause
+    goto menu
+)
+
+if not exist "%file%" (
+    echo Error: The file '%file%' does not exist.
+    pause
+    goto menu
+)
+
 echo Decrypting file...
-powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\file_caesar_cipher_decrypt.ps1" -filePath "%file%" -shift %shift%
+powershell -ExecutionPolicy Bypass -File "%scriptPath%" -filePath "%file%" -shift %shift%
 echo File decrypted successfully.
 pause
 goto menu
 
-
 :compress_file
 set /p file="Enter the file path to compress: "
-powershell -ExecutionPolicy Bypass -File "C:\path\to\lz77_compress.ps1" -filePath "%file%"
+echo File path provided: "%file%"  REM Debugging line to check for spaces or issues in the path
+set "scriptPath=C:\Users\HP\OneDrive\Documents\chp\lz77_compress.ps1"
+
+if not exist "%scriptPath%" (
+    echo Error: The script '%scriptPath%' does not exist.
+    pause
+    goto menu
+)
+
+if not exist "%file%" (
+    echo Error: The file '%file%' does not exist.
+    pause
+    goto menu
+)
+
+echo File path is valid. Proceeding with compression...
+powershell -ExecutionPolicy Bypass -File "%scriptPath%" -filePath "%file%"
 echo File compressed successfully.
 pause
 goto menu
 
+
+
 :decompress_file
 set /p file="Enter the file path to decompress: "
-powershell -ExecutionPolicy Bypass -File "C:\path\to\lz77_decompress.ps1" -filePath "%file%"
+powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\chp\lz77_decompress.ps1" -filePath "%file%"
 echo File decompressed successfully.
 pause
 goto menu
@@ -116,11 +154,3 @@ goto menu
 :exit
 echo Exiting... Goodbye!
 exit
-
-
-
-
-
-
-
-
