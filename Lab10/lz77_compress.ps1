@@ -31,7 +31,11 @@ while ($currentPos -lt $contentLength) {
 
     for ($i = $searchStart; $i -lt $currentPos; $i++) {
         $matchLen = 0
-        while ($matchLen -lt $matchSize -and ($currentPos + $matchLen) -lt $contentLength -and $content[$i + $matchLen] -eq $content[$currentPos + $matchLen]) {
+        while (
+            $matchLen -lt $matchSize -and
+            ($currentPos + $matchLen) -lt $contentLength -and
+            $content[$i + $matchLen] -eq $content[$currentPos + $matchLen]
+        ) {
             $matchLen++
         }
 
@@ -55,7 +59,6 @@ while ($currentPos -lt $contentLength) {
     $currentPos += [Math]::Max($bestMatchLength, 1)
 }
 
-# Save the compressed data to an output file
-$outputPath = "C:\Users\HP\OneDrive\Documents\chp\lz77_compressed.txt"
-Set-Content -Path $outputPath -Value $compressedData
-Write-Host "Compression complete. Compressed data written to $outputPath."
+# Overwrite the original file with the compressed data
+Set-Content -Path $filePath -Value $compressedData
+Write-Host "Compression complete. Compressed data written back to the original file."
