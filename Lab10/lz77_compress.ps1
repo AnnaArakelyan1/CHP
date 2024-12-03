@@ -49,15 +49,8 @@ while ($currentPos -lt $contentLength) {
         }
     }
     
-    # Get the following character if within bounds
-    $followingChar = if (($currentPos + $bestMatchLength) -lt $contentLength) {
-        $content[$currentPos + $bestMatchLength]
-    } else {
-        ''
-    }
-    
-    if ($bestMatchLength -gt 1) {
-        # Append the match as [offset|length] with the last matched character
+    if ($bestMatchLength -gt 2) {  # Changed threshold to 2
+        # Append the last matched character followed by [offset|length]
         $compressedData += "$($content[$currentPos + $bestMatchLength - 1])[$bestMatchOffset|$bestMatchLength]"
         $currentPos += $bestMatchLength
     } else {
