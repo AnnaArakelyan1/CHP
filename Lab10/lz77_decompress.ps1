@@ -22,9 +22,8 @@ $currentPos = 0
 $contentLength = $compressedContent.Length
 
 while ($currentPos -lt $contentLength) {
-    # Check if we're at the start of a compressed sequence
+    # Check if we're at a character followed by [offset|length]
     if ($currentPos + 1 -lt $contentLength -and $compressedContent[$currentPos + 1] -eq '[') {
-        # Store the character before the bracket
         $charBeforeBracket = $compressedContent[$currentPos]
         
         # Find the closing bracket
@@ -54,7 +53,7 @@ while ($currentPos -lt $contentLength) {
             for ($i = 0; $i -lt $length - 1; $i++) {
                 $decompressedData += $decompressedData[$startPos + $i]
             }
-            # Add the character before the bracket as the last character of the sequence
+            # Add the character before the bracket as the last character
             $decompressedData += $charBeforeBracket
             
             # Move the position past the closing bracket
