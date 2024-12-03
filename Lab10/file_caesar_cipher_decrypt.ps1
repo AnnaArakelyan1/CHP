@@ -12,16 +12,22 @@ if (!(Test-Path -Path $filePath)) {
     exit
 }
 
-# Read the encrypted content as a byte array
-$encryptedContent = [System.IO.File]::ReadAllBytes($filePath)
+# Read the encrypted content as a string
+$encryptedContent = Get-Content -Path $filePath -Raw
 
-# Decrypt the content by shifting each byte value back
-$decryptedContent = $encryptedContent | ForEach-Object {
-    ($_ - $shift + 256) % 256
-}
+# Decrypt the content by shifting each character in the printable range (32–126)
+$decryptedContent = ($encryptedContent.ToCharArray() | ForEach-Object {
+    $ascii = [int][char]$_
+    if ($ascii -ge 32 -and $ascii -le 126) {
+        $newAscii = (($ascii - 32 - $shift + 95) % 95) + 32
+        [char]$newAscii
+    } else {
+        $_  # Keep non-printable characters unchanged
+    }
+}) -join ""  # Join the decrypted characters into a single string
 
 # Save the decrypted content to a new file
 $decryptedFilePath = "$filePath.decrypted"
-[System.IO.File]::WriteAllBytes($decryptedFilePath, [byte[]]$decryptedContent)
+Set-Content -Path $decryptedFilePath -Value $decryptedContent
 
 Write-Host "Decrypted file created at: $decryptedFilePath"
