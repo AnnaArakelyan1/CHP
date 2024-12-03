@@ -51,33 +51,43 @@ goto menu
 :encrypt_text
 set /p text="Enter text to encrypt: "
 set /p shift="Enter shift value: "
-powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\caesar_cipher.ps1" -text "%text%" -shift %shift%
+powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\caesar_cipher.ps1" -text "%text%" -shift %shift% > encrypted_output.txt
+for /f "usebackq delims=" %%A in (encrypted_output.txt) do set encrypted_text=%%A
+echo Encrypted text is: %encrypted_text%
 pause
 goto menu
 
 :decrypt_text
 set /p text="Enter text to decrypt: "
-set /p shift="Enter the original shift value used for encryption: "
+set /p shift="Enter shift value used for encryption: "
 set /a decrypt_shift=-%shift%
-powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\caesar_cipher.ps1" -text "%text%" -shift %decrypt_shift%
+powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\caesar_cipher.ps1" -text "%text%" -shift %decrypt_shift% > decrypted_output.txt
+for /f "usebackq delims=" %%A in (decrypted_output.txt) do set decrypted_text=%%A
+echo Decrypted text is: %decrypted_text%
 pause
 goto menu
+
+
+
+
 
 :encrypt_file
 set /p file="Enter the file path to encrypt: "
 set /p shift="Enter shift value: "
-powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\chp\file_caesar_cipher.ps1" -filePath "%file%" -shift %shift%
+powershell -File "C:\Users\HP\OneDrive\Documents\file_caesar_cipher.ps1" -filePath "%file%" -shift %shift%
 echo File encrypted successfully.
 pause
 goto menu
 
 :decrypt_file
-set /p file="Enter the file path to decrypt (e.g., C:\path\to\file.encrypted): "
+set /p file="Enter the file path to decrypt: "
 set /p shift="Enter shift value used for encryption: "
-powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\chp\file_caesar_cipher_decrypt.ps1" -filePath "%file%" -shift %shift%
+echo Decrypting file...
+powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\file_caesar_cipher_decrypt.ps1" -filePath "%file%" -shift %shift%
 echo File decrypted successfully.
 pause
 goto menu
+
 
 :compress_file
 set /p file="Enter the file path to compress: "
@@ -106,3 +116,11 @@ goto menu
 :exit
 echo Exiting... Goodbye!
 exit
+
+
+
+
+
+
+
+
