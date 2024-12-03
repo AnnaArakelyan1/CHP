@@ -51,46 +51,46 @@ goto menu
 :encrypt_text
 set /p text="Enter text to encrypt: "
 set /p shift="Enter shift value: "
-powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\caesar_cipher.ps1" -text "%text%" -shift %shift% > encrypted_output.txt
-for /f "usebackq delims=" %%A in (encrypted_output.txt) do set encrypted_text=%%A
-echo Encrypted text is: %encrypted_text%
+echo Encrypting text: %text% with shift value: %shift%
+powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\chp\caesar_cipher_encrypt.ps1" -text "%text%" -shift %shift%
 pause
 goto menu
+
 
 :decrypt_text
 set /p text="Enter text to decrypt: "
 set /p shift="Enter shift value used for encryption: "
-set /a decrypt_shift=-%shift%
-powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\caesar_cipher.ps1" -text "%text%" -shift %decrypt_shift% > decrypted_output.txt
-for /f "usebackq delims=" %%A in (decrypted_output.txt) do set decrypted_text=%%A
-echo Decrypted text is: %decrypted_text%
+echo Decrypting text: %text% with shift value: %shift%
+powershell -ExecutionPolicy Bypass -File "C:\Users\HP\OneDrive\Documents\chp\caesar_cipher_decrypt.ps1" -text "%text%" -shift %shift%
 pause
 goto menu
 
+
+
+
 :encrypt_file
 set /p file="Enter the file path to encrypt: "
-set "scriptPath=C:\Users\HP\OneDrive\Documents\file_caesar_cipher.ps1"
+set "scriptPath=C:\Users\HP\OneDrive\Documents\chp\file_caesar_cipher.ps1"
+
+echo Checking if script exists at %scriptPath%...
 if not exist "%scriptPath%" (
     echo Error: The script '%scriptPath%' does not exist.
+    echo Make sure the script is located at the specified path.
     pause
     goto menu
 )
 
-if not exist "%file%" (
-    echo Error: The file '%file%' does not exist.
-    pause
-    goto menu
-)
-
-powershell -File "%scriptPath%" -filePath "%file%"
+echo Script found. Proceeding with encryption...
+powershell -ExecutionPolicy Bypass -File "%scriptPath%" -filePath "%file%" -shift 3
 echo File encrypted successfully.
 pause
 goto menu
 
+
 :decrypt_file
 set /p file="Enter the file path to decrypt: "
 set /p shift="Enter shift value used for encryption: "
-set "scriptPath=C:\Users\HP\OneDrive\Documents\file_caesar_cipher_decrypt.ps1"
+set "scriptPath=C:\Users\HP\OneDrive\Documents\chp\file_caesar_cipher_decrypt.ps1"
 if not exist "%scriptPath%" (
     echo Error: The script '%scriptPath%' does not exist.
     pause
@@ -108,6 +108,8 @@ powershell -ExecutionPolicy Bypass -File "%scriptPath%" -filePath "%file%" -shif
 echo File decrypted successfully.
 pause
 goto menu
+
+
 
 :compress_file
 set /p file="Enter the file path to compress: "
