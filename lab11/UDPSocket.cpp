@@ -4,7 +4,7 @@ int UDPSocket::WSAInit() {
     static unsigned int count = 0;
     if (count++)
         return 0;
-    
+
 #ifdef WIN32
     WSADATA wsa;
     printf("\nInitializing Winsock...");
@@ -43,12 +43,11 @@ int UDPSocket::SendDatagram(const char* msg, unsigned int msglen, struct sockadd
 }
 
 int UDPSocket::RecvDatagram(char* buf, unsigned int buflen, struct sockaddr* si_dest, int* slen) {
-    int received_len = recvfrom(s, buf, buflen - 1, 0, si_dest, slen); 
+    int received_len = recvfrom(s, buf, buflen - 1, 0, si_dest, slen);
     if (received_len == SOCKET_ERROR) {
         printf("recvfrom() failed with error code : %d", WSAGetLastError());
         exit(EXIT_FAILURE);
     }
-    buf[received_len] = '\0'; 
+    buf[received_len] = '\0';
     return 0;
 }
-
