@@ -13,7 +13,7 @@ UDPServer::UDPServer(unsigned short port) {
         throw std::runtime_error("Socket creation failed");
     }
 
- 
+
     si_server.sin_family = AF_INET;
     si_server.sin_port = htons(port);
     si_server.sin_addr.s_addr = INADDR_ANY;
