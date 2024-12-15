@@ -1,23 +1,20 @@
-#ifndef UDPSERVER_H
-#define UDPSERVER_H
-
+#pragma once
 #include <winsock2.h>
-#include <ws2tcpip.h>
-#include <iostream>
-
-#define BUFLEN 1024 
 
 class UDPServer {
 public:
-    UDPServer(unsigned short port);
-    ~UDPServer();
+ 
+    UDPServer(SOCKET socket);
 
-    int RecvDatagram(char* buf, unsigned int buflen, struct sockaddr* si_dest, int* slen);
-    int SendDatagram(const char* msg, unsigned int msglen, struct sockaddr* si_dest, unsigned int slen);
+ 
+    UDPServer();
+
+    ~UDPServer();  
+
+    int Bind(struct sockaddr* addr, int addrlen);
+    int SendDatagram(const char* buf, int len, struct sockaddr* addr, int addrlen);
+    int RecvDatagram(char* buf, int len, struct sockaddr* addr, int* addrlen);
 
 private:
-    SOCKET s;
-    struct sockaddr_in si_server;
+    SOCKET serverSock; 
 };
-
-#endif
