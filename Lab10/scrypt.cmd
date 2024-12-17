@@ -146,12 +146,36 @@ goto menu
 :hash_value
 set /p input="Enter text or file path: "
 echo Calculating hashes...
-certutil -hashfile "%input%" > def-hash-%input%.txt
-certutil -hashfile "%input%" MD5 > MD5-%input%.txt
-certutil -hashfile "%input%" SHA256 > SHA256-%input%.txt
-echo Hash values saved to def-hash-%input%.txt, MD5-%input%.txt, and SHA256-%input%.txt.
-pause
+
+REM Check if input is a file or a string
+if exist "%input%" (
+    REM Extract the file name and extension from the full path
+    for %%f in ("%input%") do set filename=%%~nxf
+
+    REM Calculate and print hashes for the file using certutil
+    echo MD5 Hash:
+    certutil -hashfile "%input%" MD5 | findstr /r /v "^$" | findstr /v "certutil"
+
+    echo SHA256 Hash:
+    certutil -hashfile "%input%" SHA256 | findstr /r /v "^$" | findstr /v "certutil"
+
+    echo Default Hash:
+    certutil -hashfile "%input%" | findstr /r /v "^$" | findstr /v "certutil"
+) else (
+    REM If the input is not a file, treat it as a text input and hash it
+    echo Hashing text input using PowerShell...
+
+    REM Escape the input and hash it using PowerShell
+    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $hash=[BitConverter]::ToString((New-Object Security.Cryptography.SHA256Managed).ComputeHash($bytes)); $hash -replace '-',''"
+
+    pause
+)
+
 goto menu
+
+
+
+
 
 :exit
 echo Exiting... Goodbye!
