@@ -147,40 +147,64 @@ goto menu
 set /p input="Enter text or file path: "
 echo Calculating hashes...
 
-REM Check if input is a file or a string
+REM Set the output directory
+set output_dir=C:\Users\HP\OneDrive\Documents\chp
+
+REM Ensure the directory exists
+if not exist "%output_dir%" (
+    echo Directory %output_dir% does not exist. Creating it now...
+    mkdir "%output_dir%"
+)
+
+REM Check if the input is a file or text
 if exist "%input%" (
+    REM If the input is a file, process it
     REM Extract the file name and extension from the full path
     for %%f in ("%input%") do set filename=%%~nxf
 
-    REM Calculate and print hashes for the file using certutil
-    echo MD5 Hash:
-    certutil -hashfile "%input%" MD5 | findstr /r /v "^$" | findstr /v "certutil"
+    REM Define output file path for the hash values
+    set md5_file=%output_dir%\MD5-%filename%.txt
+    set sha1_file=%output_dir%\SHA1-%filename%.txt
+    set sha256_file=%output_dir%\SHA256-%filename%.txt
 
-    echo SHA256 Hash:
-    certutil -hashfile "%input%" SHA256 | findstr /r /v "^$" | findstr /v "certutil"
+    REM Calculate and save hashes for the file using certutil
+    echo Calculating MD5 hash for %input%
+    certutil -hashfile "%input%" MD5 | findstr /r /v "^$" | findstr /v "certutil" > "%md5_file%"
+    echo MD5 Hash saved to %md5_file%
 
-    echo Default Hash:
-    certutil -hashfile "%input%" | findstr /r /v "^$" | findstr /v "certutil"
+    echo Calculating SHA1 hash for %input%
+    certutil -hashfile "%input%" SHA1 | findstr /r /v "^$" | findstr /v "certutil" > "%sha1_file%"
+    echo SHA1 Hash saved to %sha1_file%
+
+    echo Calculating SHA256 hash for %input%
+    certutil -hashfile "%input%" SHA256 | findstr /r /v "^$" | findstr /v "certutil" > "%sha256_file%"
+    echo SHA256 Hash saved to %sha256_file%
+
 ) else (
-    REM If the input is not a file, treat it as a text input and hash it
+    REM If the input is not a file, treat it as text input
     echo Hashing text input using PowerShell...
 
-    REM Calculate MD5 hash
-    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $md5=[BitConverter]::ToString((New-Object Security.Cryptography.MD5CryptoServiceProvider).ComputeHash($bytes)); $md5 -replace '-',''"
+    REM Define output file path for the text hashes
+    set md5_file=%output_dir%\MD5-text-hash.txt
+    set sha1_file=%output_dir%\SHA1-text-hash.txt
+    set sha256_file=%output_dir%\SHA256-text-hash.txt
 
-    REM Calculate SHA1 hash
-    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $sha1=[BitConverter]::ToString((New-Object Security.Cryptography.SHA1Managed).ComputeHash($bytes)); $sha1 -replace '-',''"
+    REM Calculate and save MD5 hash for text input
+    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $md5=[BitConverter]::ToString((New-Object Security.Cryptography.MD5CryptoServiceProvider).ComputeHash($bytes)); $md5 -replace '-',''" > "%md5_file%"
+    echo MD5 Hash saved to %md5_file%
 
-    REM Calculate SHA256 hash
-    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $sha256=[BitConverter]::ToString((New-Object Security.Cryptography.SHA256Managed).ComputeHash($bytes)); $sha256 -replace '-',''"
+    REM Calculate and save SHA1 hash for text input
+    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $sha1=[BitConverter]::ToString((New-Object Security.Cryptography.SHA1Managed).ComputeHash($bytes)); $sha1 -replace '-',''" > "%sha1_file%"
+    echo SHA1 Hash saved to %sha1_file%
 
-    pause
+    REM Calculate and save SHA256 hash for text input
+    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $sha256=[BitConverter]::ToString((New-Object Security.Cryptography.SHA256Managed).ComputeHash($bytes)); $sha256 -replace '-',''" > "%sha256_file%"
+    echo SHA256 Hash saved to %sha256_file%
+
 )
 
+pause
 goto menu
-
-
-
 
 
 
