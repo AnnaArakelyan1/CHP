@@ -165,13 +165,20 @@ if exist "%input%" (
     REM If the input is not a file, treat it as a text input and hash it
     echo Hashing text input using PowerShell...
 
-    REM Escape the input and hash it using PowerShell
-    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $hash=[BitConverter]::ToString((New-Object Security.Cryptography.SHA256Managed).ComputeHash($bytes)); $hash -replace '-',''"
+    REM Calculate MD5 hash
+    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $md5=[BitConverter]::ToString((New-Object Security.Cryptography.MD5CryptoServiceProvider).ComputeHash($bytes)); $md5 -replace '-',''"
+
+    REM Calculate SHA1 hash
+    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $sha1=[BitConverter]::ToString((New-Object Security.Cryptography.SHA1Managed).ComputeHash($bytes)); $sha1 -replace '-',''"
+
+    REM Calculate SHA256 hash
+    powershell -Command "$input='%input%'; $bytes=[System.Text.Encoding]::UTF8.GetBytes($input); $sha256=[BitConverter]::ToString((New-Object Security.Cryptography.SHA256Managed).ComputeHash($bytes)); $sha256 -replace '-',''"
 
     pause
 )
 
 goto menu
+
 
 
 
